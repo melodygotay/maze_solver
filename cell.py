@@ -2,29 +2,31 @@ class Cell:
     width = 20
     height = 20
 
-    def __init__(self, x1, y1, x2, y2, left=True, right=True, top=True, bottom=True, win=None):
-        self.left = left
-        self.right = right
-        self.top = top
-        self.bottom = bottom
+    def __init__(self, x1, y1, x2, y2, win=None):
         self._x1 = x1
         self._y1 = y1
         self._x2 = x2
         self._y2 = y2
         self._win = win
+        self.walls = {
+            'top': True,
+            'bottom': True,
+            'left': True,
+            'right': True
+        }
         self.visited = False
 
-    def draw(self):
+    def draw(self, wall_color="black"):
         if not self._win:
             raise ValueError("Window or canvas not defined")
-        if self.left:
-            self._win.create_line(self._x1, self._y1, self._x1, self._y2)
-        if self.right:
-            self._win.create_line(self._x2, self._y1, self._x2, self._y2)
-        if self.top:
-            self._win.create_line(self._x1, self._y1, self._x2, self._y1)
-        if self.bottom:
-            self._win.create_line(self._x1, self._y2, self._x2, self._y2)
+        if self.walls['left']:
+            self._win.create_line(self._x1, self._y1, self._x1, self._y2, fill=wall_color)
+        if self.walls['right']:
+            self._win.create_line(self._x2, self._y1, self._x2, self._y2, fill=wall_color)
+        if self.walls['top']:
+            self._win.create_line(self._x1, self._y1, self._x2, self._y1, fill=wall_color)
+        if self.walls['bottom']:
+            self._win.create_line(self._x1, self._y2, self._x2, self._y2, fill=wall_color)
 
     def mark_as_visited(self):
         self.visited = True
@@ -43,3 +45,21 @@ class Cell:
         if not self._win:
             raise ValueError("Window or canvas not defined")
         self._win.create_line(center_x_self, center_y_self, center_x_to, center_y_to, fill=line_color)
+
+    def remove_wall(self, wall):
+        self.walls[wall] = False
+
+    def has_wall(self, wall):
+        return self.walls[wall]
+
+    '''   def remove_wall(self, wall):
+        if wall == 'top':
+            self.top = False
+        elif wall == 'bottom':
+            self.bottom = False
+        elif wall == 'left':
+            self.left = False
+        elif wall == 'right':
+            self.right = False
+        else:
+            raise ValueError("Invalid wall specified")'''
