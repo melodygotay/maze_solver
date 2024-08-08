@@ -15,18 +15,20 @@ class Cell:
             'right': True
         }
         self.visited = False
+        if self._win is None:
+            raise ValueError("Window or canvas is not defined at Cell initialization")
 
     def draw(self, wall_color="black"):
         if not self._win:
             raise ValueError("Window or canvas not defined")
         if self.walls['left']:
-            self._win.create_line(self._x1, self._y1, self._x1, self._y2, fill=wall_color)
+            self._win.draw_line(self._x1, self._y1, self._x1, self._y2, fill_color=wall_color)  # Draw left wall
         if self.walls['right']:
-            self._win.create_line(self._x2, self._y1, self._x2, self._y2, fill=wall_color)
+            self._win.draw_line(self._x2, self._y1, self._x2, self._y2, fill_color=wall_color)  # Draw right wall
         if self.walls['top']:
-            self._win.create_line(self._x1, self._y1, self._x2, self._y1, fill=wall_color)
+            self._win.draw_line(self._x1, self._y1, self._x2, self._y1, fill_color=wall_color)  # Draw top wall
         if self.walls['bottom']:
-            self._win.create_line(self._x1, self._y2, self._x2, self._y2, fill=wall_color)
+            self._win.draw_line(self._x1, self._y2, self._x2, self._y2, fill_color=wall_color)  # Draw bottom wall
 
     def mark_as_visited(self):
         self.visited = True
@@ -42,24 +44,12 @@ class Cell:
 
         line_color = "gray" if undo else "red"
 
-        if not self._win:
+        if self._win is None:
             raise ValueError("Window or canvas not defined")
-        self._win.create_line(center_x_self, center_y_self, center_x_to, center_y_to, fill=line_color)
+        self._win.draw_line(center_x_self, center_y_self, center_x_to, center_y_to, fill_color=line_color)
 
     def remove_wall(self, wall):
         self.walls[wall] = False
 
     def has_wall(self, wall):
         return self.walls[wall]
-
-    '''   def remove_wall(self, wall):
-        if wall == 'top':
-            self.top = False
-        elif wall == 'bottom':
-            self.bottom = False
-        elif wall == 'left':
-            self.left = False
-        elif wall == 'right':
-            self.right = False
-        else:
-            raise ValueError("Invalid wall specified")'''

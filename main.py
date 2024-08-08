@@ -1,26 +1,43 @@
 from graphics import Window, Line, Point
-
+from nicegui import ui
+from maze import Maze
+from cell import Cell
 
 def main():
-    window = Window(800, 600)  # Create a window with width 800 and height 600
+    dimensions = (800, 600)  # Window size
+    start_pos = (10, 10)     # Starting position
+    grid_size = (11, 11)     # Grid dimensions
     
-    # Create points
-    p1 = Point(100, 100)
-    p2 = Point(200, 200)
-    p3 = Point(300, 300)
-    p4 = Point(400, 100)
-    
-    # Create lines from points
-    line1 = Line(p1, p2)
-    line2 = Line(p3, p4)
-    
-    # Draw lines on the window
-    window.draw_line(line1, "red")
-    window.draw_line(line2, "blue")
-    
-    # Wait for the window to close
+    # Assuming Window manages a graphics window interface, ensure all dependencies are correctly imported
+    window = Window(*dimensions)
+
+    # Adjust cell sizes based on the window dimensions and grid size
+    cell_size = (
+        (dimensions[0] - 20) // grid_size[1],
+        (dimensions[1] - 20) // grid_size[0]
+    )
+
+    # Initialize the Maze with window support
+    maze = Maze(*start_pos, *grid_size, *cell_size, win=window)
+
+    # Print the initial maze configuration
+    maze.print_maze_config()
+
+    # Generate the maze paths using recursive wall breaking
+    maze._break_walls_r(0, 0)
+
+    # Set up the visualization, ensuring it's ready before solving
+    maze.visualize_maze()
+
+    # Attempt to solve and visualize the maze
+    solved = maze.solve()
+
+    # Display result after solving
+    print(f"Solved: {solved}")
+
+    # Handle window management and wait to close
     window.wait_for_close()
 
-main()
-
-#ON TO PAGE 5 OF THE ASSIGNMENT
+if __name__ in {"__main__", "__mp_main__"}:
+    main()
+    ui.run()
